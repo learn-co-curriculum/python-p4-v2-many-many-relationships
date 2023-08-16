@@ -182,14 +182,14 @@ We can explore the relationship using Flask shell:
 
 ```console
 $ flask shell
->>> meeting2 = Meeting.query.get(2)
+>>> meeting2 = Meeting.query.filter_by(id = 2).first()
 >>> meeting2
 <Meeting 2, Github Issues Brainstorming, 2023-12-01 15:15:00, Building D, Room 430>
 >>>
 >>> meeting2.employees
 [<Employee 1, Uri Lee, 2022-05-17>, <Employee 4, Taylor Jai, 2015-01-02>, <Employee 3, Sasha Hao, 2021-12-01>, <Employee 2, Tristan Tal, 2020-01-30>]
 >>>
->>> employee1 = Employee.query.get(1)
+>>> employee1 = Employee.query.filter_by(id = 1).first()
 >>> employee1.meetings
 [<Meeting 1, Software Engineering Weekly Update, 2023-10-31 09:30:00, Building A, Room 142>, <Meeting 2, Github Issues Brainstorming, 2023-12-01 15:15:00, Building D, Room 430>]
 ```
@@ -331,11 +331,11 @@ We can use Flask shell to get assignments for an employee or a project:
 
 ```console
 $ flask shell
->>> employee2 = Employee.query.get(2)
+>>> employee2 = Employee.query.filter_by(id = 2).first()
 >>> employee2.assignments
 [<Assignment 2, Flask programmer, 2023-06-10 00:00:00, 2023-10-01 00:00:00, Tristan Tal, XYZ Project Flask server>, <Assignment 3, Flask programmer, 2023-11-01 00:00:00, 2024-02-01 00:00:00, Tristan Tal, XYZ Project React UI>]
 >>>
->>> project1 = Project.query.get(1)
+>>> project1 = Project.query.filter_by(id = 1).first()
 >>> project1.assignments
 [<Assignment 1, Project manager, 2023-05-28 00:00:00, 2023-10-30 00:00:00, Uri Lee, XYZ Project Flask server>, <Assignment 2, Flask programmer, 2023-06-10 00:00:00, 2023-10-01 00:00:0
 ```
@@ -349,7 +349,7 @@ working on project #1, we need to iterate through the project's assignments to
 then get the employee associated with each assignment:
 
 ```console
->>> project1 = Project.query.get(1)
+>>> project1 = Project.query.filter_by(id = 1).first()
 >>> [assignment.employee for assignment in project1.assignments]
 [<Employee 1, Uri Lee, 2022-05-17>, <Employee 2, Tristan Tal, 2020-01-30>]
 >>>
@@ -414,7 +414,7 @@ Now we can easily get the employees for a project:
 
 ```console
 >>> # Use association proxy to get employees for a project
->>> project1 = Project.query.get(1)
+>>> project1 = Project.query.filter_by(id = 1).first()
 >>> project1.employees
 [<Employee 1, Uri Lee, 2022-05-17>, <Employee 2, Tristan Tal, 2020-01-30>]
 ```
@@ -423,7 +423,7 @@ As well as the projects for an employee:
 
 ```console
 >>> # Use association proxy to get project for an employee
->>> employee1 = Employee.query.get(1)
+>>> employee1 = Employee.query.filter_by(id = 1).first()
 >>> employee1.projects
 [<Review 1, XYZ Project Flask server, 50000>]
 >>>
