@@ -146,6 +146,13 @@ flask db migrate -m 'add employee_meetings association table
 flask db upgrade head
 ```
 
+Update `seed.py` to import the table data structure:
+
+```py
+from models import db, Employee, Meeting, Project, employee_meetings
+
+```
+
 Update `seed.py` to delete the new table along with the other tables. Since the
 table is not created from a model class, you'll need to delete it using
 `db.session.query(employee_meetings).delete()`:
@@ -284,6 +291,12 @@ flask db migrate -m 'add assignment association table
 flask db upgrade head
 ```
 
+Update `seed.py` to import the new model:
+
+```py
+from models import db, Employee, Meeting, Project, Assignment, employee_meetings
+```
+
 Update `seed.py` to delete the new table:
 
 ```py
@@ -378,7 +391,7 @@ class Employee(db.Model):
 
     # Association proxy to get projects for this employee through assignments
     projects = association_proxy('assignments', 'project',
-                                 creator=lambda project: Project(project=project))
+                                 creator=lambda project_obj: Assignment(project=project_obj))
 
     def __repr__(self):
         return f'<Employee {self.id}, {self.name}, {self.hire_date}>'
@@ -398,7 +411,7 @@ class Project(db.Model):
 
     # Association proxy to get employees for this project through assignments
     employees = association_proxy('assignments', 'employee',
-                                  creator=lambda employee: Employee(employee=employee))
+                                  creator=lambda employee_obj: Assignments(employee=employee_obj))
 
     def __repr__(self):
         return f'<Review {self.id}, {self.title}, {self.budget}>'
@@ -422,7 +435,7 @@ Now we can easily get the employees for a project:
 As well as the projects for an employee:
 
 ```console
->>> # Use association proxy to get project for an employee
+>>> # Use association proxy to get projects for an employee
 >>> employee1 = Employee.query.filter_by(id = 1).first()
 >>> employee1.projects
 [<Review 1, XYZ Project Flask server, 50000>]
@@ -545,13 +558,11 @@ class Assignment(db.Model):
 
     # Foreign key to store the employee id
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
-
     # Foreign key to store the project id
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
     # Relationship mapping the assignment to related employee
     employee = db.relationship('Employee', back_populates='assignments')
-
     # Relationship mapping the assignment to related project
     project = db.relationship('Project', back_populates='assignments')
 
