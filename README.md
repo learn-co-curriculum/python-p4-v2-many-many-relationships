@@ -418,10 +418,8 @@ class Project(db.Model):
 
 ```
 
-The `creator` parameter takes a function (an anonymous lambda function in this
-case) which accepts an employee or project and returns an assignment for that
-employee or project. This assignment has, in a sense, created the relationship
-between the employee and project.
+The first argument indicates the relationship property we intend to use as 'connector' and the second argument indicates the name of the model we're trying to connect to. The `creator` parameter takes a function (an anonymous lambda function in this
+case) which accepts as argument an object of the other independent class and returns the corresponding object of the 'connecting' class that made the connection possible. For the associaion proxy inside `Employee`, we're saying that we want to use the `assignments` relationship to connect to the `Project` model. The `creator` function takes a `Project` object and returns an `Assignment` object.
 
 Now we can easily get the employees for a project:
 
