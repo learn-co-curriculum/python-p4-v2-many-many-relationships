@@ -179,6 +179,7 @@ employees to a meeting.
     m2.employees.append(e2)
     m2.employees.append(e3)
     m2.employees.append(e4)
+    db.session.commit()
 ```
 
 Let's confirm the database table has the correct rows:
@@ -277,7 +278,7 @@ class Project(db.Model):
     budget = db.Column(db.Integer)
 
     # Relationship mapping the project to related assignments
-    assignments = db.relationship('Assignment', back_populates='project',cascade='all, delete-orphan'
+    assignments = db.relationship('Assignment', back_populates='project',cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Review {self.id}, {self.title}, {self.budget}>'
@@ -287,7 +288,7 @@ class Project(db.Model):
 Migrate the schema to reflect the new model:
 
 ```console
-flask db migrate -m 'add assignment association table
+flask db migrate -m 'add assignment association table'
 flask db upgrade head
 ```
 
