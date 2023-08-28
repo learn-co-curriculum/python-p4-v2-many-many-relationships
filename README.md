@@ -142,7 +142,7 @@ class Meeting(db.Model):
 You'll need to migrate the schema with the new table:
 
 ```console
-flask db migrate -m 'add employee_meetings association table
+flask db migrate -m 'add employee_meetings association table'
 flask db upgrade head
 ```
 
@@ -180,6 +180,12 @@ employees to a meeting.
     m2.employees.append(e3)
     m2.employees.append(e4)
     db.session.commit()
+```
+
+Re-seed the database:
+
+```console
+$ python seed.py
 ```
 
 Let's confirm the database table has the correct rows:
@@ -263,6 +269,7 @@ class Employee(db.Model):
     # Relationship mapping the employee to related meetings
     meetings = db.relationship(
         'Meeting', secondary=employee_meetings, back_populates='employees')
+
     # Relationship mapping the employee to related assignments
     assignments = db.relationship(
         'Assignment', back_populates='employee', cascade='all, delete-orphan')
@@ -335,6 +342,12 @@ a3 = Assignment(role='Flask programmer',
 
 db.session.add_all([a1, a2, a3])
 db.session.commit()
+```
+
+Re-seed the database:
+
+```console
+$ python seed.py
 ```
 
 Let's check the `assignments` table to confirm the 3 new rows:
@@ -419,8 +432,15 @@ class Project(db.Model):
 
 ```
 
-The first argument indicates the relationship property we intend to use as 'connector' and the second argument indicates the name of the model we're trying to connect to. The `creator` parameter takes a function (an anonymous lambda function in this
-case) which accepts as argument an object of the other independent class and returns the corresponding object of the 'connecting' class that made the connection possible. For the associaion proxy inside `Employee`, we're saying that we want to use the `assignments` relationship to connect to the `Project` model. The `creator` function takes a `Project` object and returns an `Assignment` object.
+The first argument indicates the relationship property we intend to use as
+'connector' and the second argument indicates the name of the model we're trying
+to connect to. The `creator` parameter takes a function (an anonymous lambda
+function in this case) which accepts as argument an object of the other
+independent class and returns the corresponding object of the 'connecting' class
+that made the connection possible. For the associaion proxy inside `Employee`,
+we're saying that we want to use the `assignments` relationship to connect to
+the `Project` model. The `creator` function takes a `Project` object and returns
+an `Assignment` object.
 
 Now we can easily get the employees for a project:
 
